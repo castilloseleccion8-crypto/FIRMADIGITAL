@@ -36,127 +36,202 @@ COL_FECHA_SOLICITUD = "FECHA DE SOLICITUD"
 COL_OBSERVACIONES = "OBSERVACIONES"
 COL_ESTADO_ENCODE = "ESTADO ENCODE"
 
-# Paleta de marca Castillo. Ajustá estos valores si tenés los códigos de
-# color exactos del manual de marca.
-NAVY = "#1B1464"
-NAVY_DARK = "#100B3E"
-GOLD = "#FDB714"
+# Paleta de marca Castillo, tomada de castillo.com.ar (navbar oscura,
+# acentos dorados, botones de acción en azul). Ajustá estos valores si
+# tenés los códigos de color exactos del manual de marca.
+NAVY = "#10233F"
+NAVY_DEEP = "#0A1626"
+GOLD = "#FFC629"
 GOLD_DARK = "#C98A00"
+BLUE_CTA = "#2563EB"
+BLUE_CTA_DARK = "#1D4ED8"
 
 # Estilo visual por categoría de estado (ver instructivos.py -> "color").
 STATUS_STYLES = {
     "gray": {"card": "#8A8FA3", "badge_bg": "#EEF0F4", "badge_text": "#5B6072", "label": "Pendiente de inicio"},
-    "blue": {"card": NAVY, "badge_bg": "#E8E7F5", "badge_text": NAVY, "label": "En proceso"},
+    "blue": {"card": BLUE_CTA, "badge_bg": "#E7EEFD", "badge_text": BLUE_CTA_DARK, "label": "En proceso"},
     "orange": {"card": GOLD_DARK, "badge_bg": "#FFF3D6", "badge_text": "#8A5B00", "label": "Acción requerida"},
     "green": {"card": "#1E8E3E", "badge_bg": "#E6F4EA", "badge_text": "#1E8E3E", "label": "Completado"},
     "red": {"card": "#C5221F", "badge_bg": "#FCE8E6", "badge_text": "#C5221F", "label": "Atención"},
 }
 
-st.set_page_config(page_title="Estado Firma Digital ENCODE", layout="centered")
+st.set_page_config(page_title="Estado Firma Digital ENCODE", layout="wide")
 
 
 def inyectar_estilos() -> None:
     st.markdown(
         f"""
         <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&family=Pacifico&display=swap');
+
         #MainMenu, footer, header {{ visibility: hidden; }}
 
         html, body, [class*="css"], .stApp {{
-            font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }}
-        .stApp {{ background-color: #F4F5FA; }}
-        .block-container {{ max-width: 760px; padding-top: 2rem; }}
+        .stApp {{ background-color: #EFF1F6; }}
+        .block-container {{
+            max-width: 880px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-top: 0;
+            padding-bottom: 3rem;
+        }}
 
-        .cst-header {{
-            background: linear-gradient(135deg, {NAVY} 0%, {NAVY_DARK} 100%);
-            border-radius: 14px;
-            padding: 30px 34px;
-            margin-bottom: 26px;
+        /* ---------- Barra superior estilo Castillo ---------- */
+        .cst-navbar {{
+            background: linear-gradient(180deg, {NAVY} 0%, {NAVY_DEEP} 100%);
             border-bottom: 4px solid {GOLD};
-            box-shadow: 0 4px 14px rgba(27, 20, 100, 0.18);
+            margin: 0 -1rem 32px -1rem;
+            padding: 26px 2rem 22px 2rem;
+            box-shadow: 0 6px 18px rgba(10, 22, 38, 0.25);
         }}
-        .cst-brand {{
+        .cst-wordmark {{
+            font-family: 'Pacifico', cursive;
+            font-size: 34px;
             color: {GOLD};
-            font-size: 13px;
-            font-weight: 700;
+            margin: 0;
+            line-height: 1;
+        }}
+        .cst-tagline {{
+            color: #92A0C4;
+            font-size: 11.5px;
             letter-spacing: 3px;
             text-transform: uppercase;
-            margin: 0 0 8px 0;
+            font-weight: 600;
+            margin: 4px 0 14px 0;
         }}
-        .cst-header h1 {{
+        .cst-navbar h1 {{
+            font-family: 'Poppins', sans-serif;
             color: #FFFFFF;
-            font-size: 25px;
+            font-size: 23px;
             font-weight: 700;
-            margin: 0 0 8px 0;
+            margin: 0 0 6px 0;
             line-height: 1.3;
         }}
-        .cst-header p {{
-            color: #D9D7EF;
+        .cst-navbar p {{
+            color: #C3CBE6;
             font-size: 14.5px;
             margin: 0;
             line-height: 1.5;
+            max-width: 620px;
         }}
 
+        /* ---------- Barra lateral ---------- */
+        section[data-testid="stSidebar"] {{
+            background: linear-gradient(180deg, {NAVY} 0%, {NAVY_DEEP} 100%);
+        }}
+        section[data-testid="stSidebar"] label,
+        section[data-testid="stSidebar"] summary,
+        section[data-testid="stSidebar"] p,
+        section[data-testid="stSidebar"] span {{
+            color: #DCE2F5 !important;
+        }}
+        section[data-testid="stSidebar"] details {{
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 10px;
+        }}
+
+        /* ---------- Inputs y botones ---------- */
         div[data-testid="stTextInput"] input {{
-            border-radius: 8px;
-            border: 1px solid #D7D9E3;
-            padding: 0.6rem 0.8rem;
+            border-radius: 999px;
+            border: 1.5px solid #D7DCEA;
+            padding: 0.65rem 1.1rem;
+            font-size: 15px;
+        }}
+        div[data-testid="stTextInput"] input:focus {{
+            border-color: {BLUE_CTA};
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }}
+        div[data-testid="stTextInput"] label {{
+            font-weight: 600;
+            color: {NAVY};
+            font-size: 13.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }}
 
         div.stButton > button {{
-            background-color: {NAVY};
+            background-color: {BLUE_CTA};
             color: #FFFFFF;
             border: none;
-            border-radius: 8px;
+            border-radius: 999px;
             font-weight: 600;
-            padding: 0.55rem 1.6rem;
+            padding: 0.6rem 2rem;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
         }}
         div.stButton > button:hover {{
-            background-color: {GOLD};
-            color: {NAVY_DARK};
+            background-color: {BLUE_CTA_DARK};
+            color: #FFFFFF;
+        }}
+        div[data-testid="stDownloadButton"] > button {{
+            background-color: #FFFFFF;
+            color: {BLUE_CTA};
+            border: 1.5px solid {BLUE_CTA};
+            border-radius: 999px;
+            font-weight: 600;
+        }}
+        div[data-testid="stDownloadButton"] > button:hover {{
+            background-color: {BLUE_CTA};
+            color: #FFFFFF;
         }}
 
+        /* ---------- Tarjeta de resultado ---------- */
         .cst-card {{
             background: #FFFFFF;
-            border-radius: 14px;
-            padding: 26px 30px;
+            border-radius: 16px;
+            padding: 28px 32px;
             border-left: 6px solid var(--card-color, {NAVY});
-            box-shadow: 0 1px 4px rgba(16, 11, 62, 0.08);
+            box-shadow: 0 2px 10px rgba(16, 35, 63, 0.08);
             margin-bottom: 22px;
         }}
         .cst-badge {{
             display: inline-block;
+            font-family: 'Poppins', sans-serif;
             font-size: 11.5px;
             font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
-            padding: 4px 12px;
+            padding: 5px 14px;
             border-radius: 999px;
             background: var(--badge-bg, #EEE);
             color: var(--badge-text, #333);
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }}
-        .cst-card h2 {{ font-size: 20px; margin: 0 0 4px 0; color: #1F2430; }}
+        .cst-card h2 {{
+            font-family: 'Poppins', sans-serif;
+            font-size: 21px;
+            margin: 0 0 4px 0;
+            color: {NAVY};
+        }}
         .cst-card .cst-persona {{ color: #667085; font-size: 13.5px; margin: 0 0 14px 0; }}
-        .cst-card .cst-resumen {{ font-size: 15px; color: #1F2430; margin: 0 0 6px 0; line-height: 1.5; }}
+        .cst-card .cst-resumen {{ font-size: 15px; color: #1F2430; margin: 0 0 6px 0; line-height: 1.6; }}
         .cst-card h3 {{
-            font-size: 13px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12.5px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #667085;
-            margin: 18px 0 8px 0;
+            letter-spacing: 0.8px;
+            color: {BLUE_CTA};
+            margin: 20px 0 10px 0;
         }}
         .cst-card ul, .cst-card ol {{ margin: 0; padding-left: 22px; }}
-        .cst-card li {{ margin-bottom: 8px; line-height: 1.5; font-size: 14.5px; color: #1F2430; }}
+        .cst-card li {{ margin-bottom: 9px; line-height: 1.6; font-size: 14.5px; color: #1F2430; }}
+        .cst-card li::marker {{ color: {BLUE_CTA}; font-weight: 700; }}
 
         .cst-warning {{
             background: #FFF3D6;
             border-left: 4px solid {GOLD_DARK};
-            border-radius: 8px;
-            padding: 12px 16px;
+            border-radius: 10px;
+            padding: 14px 18px;
             font-size: 14px;
             color: #6B4A00;
             margin-bottom: 18px;
+        }}
+
+        [data-testid="stExpander"] {{
+            border-radius: 12px;
+            border: 1px solid #E1E5F0;
         }}
         </style>
         """,
@@ -327,8 +402,9 @@ def main() -> None:
     inyectar_estilos()
 
     st.markdown(
-        '<div class="cst-header">'
-        '<p class="cst-brand">Castillo · Desde 1924</p>'
+        '<div class="cst-navbar">'
+        '<p class="cst-wordmark">Castillo</p>'
+        '<p class="cst-tagline">Desde 1924</p>'
         "<h1>Estado de mi Firma Digital ENCODE</h1>"
         "<p>Ingresá tu CUIL o DNI para ver en qué paso está tu trámite y qué tenés que hacer para continuarlo.</p>"
         "</div>",
