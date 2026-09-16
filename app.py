@@ -86,6 +86,12 @@ def mostrar_resultado(fila: pd.Series) -> None:
             "Si ya no trabajás en la empresa, este trámite puede no aplicar: consultá con RRHH."
         )
 
+    antes = instructivo.get("antes")
+    if antes:
+        st.markdown("**Antes de empezar**")
+        for item in antes:
+            st.markdown(f"- {item}")
+
     st.markdown("**¿Qué tengo que hacer?**")
     for i, paso in enumerate(instructivo["pasos"], start=1):
         st.markdown(f"{i}. {paso}")
@@ -115,9 +121,9 @@ def mostrar_resultado(fila: pd.Series) -> None:
             st.caption("No las compartas con nadie. Si no las reconocés, avisá a RRHH.")
             st.markdown(f"**Usuario (DNI):** {usuario}")
             if contrasena:
-                st.markdown(f"**Contraseña:** `{contrasena}`")
+                st.markdown(f"**Contraseña** (para iniciar sesión, con el punto al final): `{contrasena}`")
             if pin:
-                st.markdown(f"**PIN:** `{pin}`")
+                st.markdown(f"**PIN** (para el PIN de seguridad, SIN el punto al final): `{pin}`")
 
 
 def panel_administracion() -> None:
