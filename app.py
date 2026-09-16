@@ -11,6 +11,7 @@ navegador.
 
 from __future__ import annotations
 
+import html
 import os
 import re
 from datetime import datetime
@@ -35,7 +36,132 @@ COL_FECHA_SOLICITUD = "FECHA DE SOLICITUD"
 COL_OBSERVACIONES = "OBSERVACIONES"
 COL_ESTADO_ENCODE = "ESTADO ENCODE"
 
-st.set_page_config(page_title="Estado Firma Digital ENCODE", page_icon="🔏", layout="centered")
+# Paleta de marca Castillo. Ajustá estos valores si tenés los códigos de
+# color exactos del manual de marca.
+NAVY = "#1B1464"
+NAVY_DARK = "#100B3E"
+GOLD = "#FDB714"
+GOLD_DARK = "#C98A00"
+
+# Estilo visual por categoría de estado (ver instructivos.py -> "color").
+STATUS_STYLES = {
+    "gray": {"card": "#8A8FA3", "badge_bg": "#EEF0F4", "badge_text": "#5B6072", "label": "Pendiente de inicio"},
+    "blue": {"card": NAVY, "badge_bg": "#E8E7F5", "badge_text": NAVY, "label": "En proceso"},
+    "orange": {"card": GOLD_DARK, "badge_bg": "#FFF3D6", "badge_text": "#8A5B00", "label": "Acción requerida"},
+    "green": {"card": "#1E8E3E", "badge_bg": "#E6F4EA", "badge_text": "#1E8E3E", "label": "Completado"},
+    "red": {"card": "#C5221F", "badge_bg": "#FCE8E6", "badge_text": "#C5221F", "label": "Atención"},
+}
+
+st.set_page_config(page_title="Estado Firma Digital ENCODE", layout="centered")
+
+
+def inyectar_estilos() -> None:
+    st.markdown(
+        f"""
+        <style>
+        #MainMenu, footer, header {{ visibility: hidden; }}
+
+        html, body, [class*="css"], .stApp {{
+            font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }}
+        .stApp {{ background-color: #F4F5FA; }}
+        .block-container {{ max-width: 760px; padding-top: 2rem; }}
+
+        .cst-header {{
+            background: linear-gradient(135deg, {NAVY} 0%, {NAVY_DARK} 100%);
+            border-radius: 14px;
+            padding: 30px 34px;
+            margin-bottom: 26px;
+            border-bottom: 4px solid {GOLD};
+            box-shadow: 0 4px 14px rgba(27, 20, 100, 0.18);
+        }}
+        .cst-brand {{
+            color: {GOLD};
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin: 0 0 8px 0;
+        }}
+        .cst-header h1 {{
+            color: #FFFFFF;
+            font-size: 25px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            line-height: 1.3;
+        }}
+        .cst-header p {{
+            color: #D9D7EF;
+            font-size: 14.5px;
+            margin: 0;
+            line-height: 1.5;
+        }}
+
+        div[data-testid="stTextInput"] input {{
+            border-radius: 8px;
+            border: 1px solid #D7D9E3;
+            padding: 0.6rem 0.8rem;
+        }}
+
+        div.stButton > button {{
+            background-color: {NAVY};
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 0.55rem 1.6rem;
+        }}
+        div.stButton > button:hover {{
+            background-color: {GOLD};
+            color: {NAVY_DARK};
+        }}
+
+        .cst-card {{
+            background: #FFFFFF;
+            border-radius: 14px;
+            padding: 26px 30px;
+            border-left: 6px solid var(--card-color, {NAVY});
+            box-shadow: 0 1px 4px rgba(16, 11, 62, 0.08);
+            margin-bottom: 22px;
+        }}
+        .cst-badge {{
+            display: inline-block;
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: var(--badge-bg, #EEE);
+            color: var(--badge-text, #333);
+            margin-bottom: 12px;
+        }}
+        .cst-card h2 {{ font-size: 20px; margin: 0 0 4px 0; color: #1F2430; }}
+        .cst-card .cst-persona {{ color: #667085; font-size: 13.5px; margin: 0 0 14px 0; }}
+        .cst-card .cst-resumen {{ font-size: 15px; color: #1F2430; margin: 0 0 6px 0; line-height: 1.5; }}
+        .cst-card h3 {{
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #667085;
+            margin: 18px 0 8px 0;
+        }}
+        .cst-card ul, .cst-card ol {{ margin: 0; padding-left: 22px; }}
+        .cst-card li {{ margin-bottom: 8px; line-height: 1.5; font-size: 14.5px; color: #1F2430; }}
+
+        .cst-warning {{
+            background: #FFF3D6;
+            border-left: 4px solid {GOLD_DARK};
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+            color: #6B4A00;
+            margin-bottom: 18px;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def solo_digitos(texto: str) -> str:
@@ -69,32 +195,46 @@ def formatear_fecha(valor) -> str | None:
 
 
 def mostrar_resultado(fila: pd.Series) -> None:
-    nombre = fila.get(COL_NOMBRE_COMPLETO) or "—"
-    sucursal = fila.get(COL_SUCURSAL) or "—"
+    nombre = html.escape(str(fila.get(COL_NOMBRE_COMPLETO) or "—"))
+    sucursal = html.escape(str(fila.get(COL_SUCURSAL) or "—"))
     estado_original = fila.get(COL_ESTADO_ENCODE)
     categoria = clasificar_estado(estado_original)
     instructivo = INSTRUCTIVOS.get(categoria, DEFAULT_INSTRUCTIVO)
+    estilo = STATUS_STYLES.get(instructivo.get("color"), STATUS_STYLES["gray"])
 
-    st.subheader(f"{instructivo['icono']} {instructivo['titulo']}")
-    st.caption(f"{nombre} · {sucursal}")
-    st.write(instructivo["resumen"])
+    antes_html = ""
+    if instructivo.get("antes"):
+        items = "".join(f"<li>{html.escape(item, quote=False)}</li>" for item in instructivo["antes"])
+        antes_html = f"<h3>Antes de empezar</h3><ul>{items}</ul>"
+
+    pasos_html = ""
+    if instructivo.get("pasos"):
+        items = "".join(f"<li>{html.escape(paso, quote=False)}</li>" for paso in instructivo["pasos"])
+        pasos_html = f"<h3>¿Qué tengo que hacer?</h3><ol>{items}</ol>"
+
+    # Todo en una sola línea sin indentación: un salto de línea o espacios
+    # sueltos dentro del bloque hacen que Streamlit lo interprete como
+    # markdown (bloque de código) en lugar de HTML.
+    tarjeta = (
+        f'<div class="cst-card" style="--card-color:{estilo["card"]}">'
+        f'<span class="cst-badge" style="--badge-bg:{estilo["badge_bg"]};--badge-text:{estilo["badge_text"]}">{estilo["label"]}</span>'
+        f'<h2>{html.escape(instructivo["titulo"])}</h2>'
+        f'<p class="cst-persona">{nombre} · {sucursal}</p>'
+        f'<p class="cst-resumen">{html.escape(instructivo["resumen"])}</p>'
+        f"{antes_html}{pasos_html}"
+        f"</div>"
+    )
+    st.markdown(tarjeta, unsafe_allow_html=True)
 
     baja = fila.get(COL_BAJA)
     if baja and str(baja).strip().lower() not in ("no", "nan", ""):
-        st.warning(
-            f"El campo BAJA de esta persona figura como '{baja}'. "
+        aviso = (
+            '<div class="cst-warning">'
+            f'El campo BAJA de esta persona figura como "{html.escape(str(baja))}". '
             "Si ya no trabajás en la empresa, este trámite puede no aplicar: consultá con RRHH."
+            "</div>"
         )
-
-    antes = instructivo.get("antes")
-    if antes:
-        st.markdown("**Antes de empezar**")
-        for item in antes:
-            st.markdown(f"- {item}")
-
-    st.markdown("**¿Qué tengo que hacer?**")
-    for i, paso in enumerate(instructivo["pasos"], start=1):
-        st.markdown(f"{i}. {paso}")
+        st.markdown(aviso, unsafe_allow_html=True)
 
     if ENCODE_PORTAL_URL:
         st.link_button("Ir al portal de ENCODE", ENCODE_PORTAL_URL)
@@ -162,10 +302,15 @@ def panel_administracion() -> None:
 
 
 def main() -> None:
-    st.title("🔏 Estado de mi Firma Digital ENCODE")
-    st.write(
-        "Ingresá tu **CUIL** (o DNI) para ver en qué paso está tu trámite "
-        "y qué tenés que hacer para continuarlo."
+    inyectar_estilos()
+
+    st.markdown(
+        '<div class="cst-header">'
+        '<p class="cst-brand">Castillo · Desde 1924</p>'
+        "<h1>Estado de mi Firma Digital ENCODE</h1>"
+        "<p>Ingresá tu CUIL o DNI para ver en qué paso está tu trámite y qué tenés que hacer para continuarlo.</p>"
+        "</div>",
+        unsafe_allow_html=True,
     )
 
     panel_administracion()
@@ -204,7 +349,6 @@ def main() -> None:
 
     for _, fila in resultados.iterrows():
         mostrar_resultado(fila)
-        st.divider()
 
 
 if __name__ == "__main__":

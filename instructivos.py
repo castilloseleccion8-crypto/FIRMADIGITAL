@@ -58,7 +58,6 @@ def clasificar_estado(estado_original: str) -> str:
 INSTRUCTIVOS = {
     "SIN_SOLICITUD": {
         "titulo": "Todavía no hay una solicitud cargada",
-        "icono": "⚪",
         "color": "gray",
         "resumen": "Todavía no iniciaste tu solicitud de Firma Digital ENCODE. Seguí esta guía para darte de alta.",
         "antes": [
@@ -93,7 +92,6 @@ INSTRUCTIVOS = {
     },
     "PENDIENTE_DESCARGA": {
         "titulo": "Solicitud enviada — falta descargar el certificado",
-        "icono": "📨",
         "color": "blue",
         "resumen": "Tu solicitud fue aprobada. El último paso es descargar e instalar tu certificado.",
         "pasos": [
@@ -112,52 +110,38 @@ INSTRUCTIVOS = {
     },
     "COMPLETADO": {
         "titulo": "Trámite completo",
-        "icono": "✅",
         "color": "green",
-        "resumen": "¡Listo! Tu certificado de Firma Digital ya fue descargado e instalado. No tenés que hacer nada más.",
+        "resumen": "Tu certificado de Firma Digital ya fue descargado e instalado. No tenés que hacer nada más.",
         "pasos": [
             "No hay ninguna acción pendiente de tu parte.",
         ],
     },
     "FALTAN_CLAVES": {
         "titulo": "Falta definir tus claves de seguridad",
-        "icono": "🔑",
         "color": "orange",
-        "resumen": "Tu solicitud está en curso pero falta que definas las claves de seguridad en el portal de ENCODE.",
+        "resumen": "Tu solicitud está en curso: falta definir las claves de seguridad en el portal de ENCODE.",
         "pasos": [
-            "Ingresá al portal de ENCODE con el usuario y contraseña que figuran en 'Mis credenciales'.",
-            "Buscá el paso 'Definición de claves de seguridad' (a veces llamado 'PIN' o 'clave de firma').",
-            "Usá el PIN que te asignamos (lo encontrás más abajo) o generá uno nuevo si el sistema te lo pide.",
-            "Confirmá y guardá los cambios. Si el sistema te da un error, avisá a RRHH.",
+            "Comunicate con RRHH para saber cómo continuar con este paso.",
         ],
     },
     "FALTA_IDENTIFICACION": {
         "titulo": "Falta completar la validación de identidad",
-        "icono": "🪪",
         "color": "orange",
-        "resumen": "Tu solicitud está en curso pero falta validar tu identidad (foto de DNI y selfie).",
+        "resumen": "Tu solicitud está en curso: falta validar tu identidad (foto de DNI y selfie).",
         "pasos": [
-            "Ingresá al portal de ENCODE con tu usuario y contraseña.",
-            "Tené a mano tu DNI físico, último ejemplar vigente (frente y dorso).",
-            "Completá la validación con buena luz, sin gorra ni lentes de sol, siguiendo las indicaciones en pantalla.",
-            "Si la app te rechaza las fotos varias veces, contactá a RRHH para que revisen el estado de tu DNI en el sistema.",
+            "Comunicate con RRHH para saber cómo continuar con este paso.",
         ],
     },
     "CLAVES_E_IDENTIFICACION": {
         "titulo": "Falta identificarte y definir tus claves",
-        "icono": "⚠️",
         "color": "orange",
         "resumen": "Tu solicitud está en curso: todavía faltan dos pasos, validar tu identidad y definir tus claves de seguridad.",
         "pasos": [
-            "Ingresá al portal de ENCODE con el usuario y contraseña de 'Mis credenciales'.",
-            "Completá primero la validación de identidad con tu DNI físico (último ejemplar) y una selfie con buena luz.",
-            "Luego completá la definición de claves de seguridad, usando el PIN indicado más abajo.",
-            "Si algún paso te da error, avisá a RRHH para que revisen tu solicitud.",
+            "Comunicate con RRHH para saber cómo continuar con estos pasos.",
         ],
     },
     "RECHAZADA": {
         "titulo": "Solicitud rechazada",
-        "icono": "❌",
         "color": "red",
         "resumen": "Tu solicitud fue rechazada.",
         "pasos": [
@@ -166,7 +150,6 @@ INSTRUCTIVOS = {
     },
     "REVOCADO": {
         "titulo": "Certificado revocado",
-        "icono": "🚫",
         "color": "red",
         "resumen": "Tu certificado fue revocado y ya no es válido para firmar.",
         "pasos": [
@@ -175,14 +158,12 @@ INSTRUCTIVOS = {
     },
     "REHACER": {
         "titulo": "Hay que rehacer el trámite",
-        "icono": "🔁",
         "color": "orange",
         "resumen": "El sistema indica que tenés que volver a hacer el trámite desde cero, con los mismos pasos que si nunca hubieras iniciado una solicitud.",
         "pasos": [],
     },
     "OTRO": {
         "titulo": "Estado a revisar con RRHH",
-        "icono": "❓",
         "color": "gray",
         "resumen": "Tu solicitud tiene un estado que no pudimos clasificar automáticamente.",
         "pasos": [
