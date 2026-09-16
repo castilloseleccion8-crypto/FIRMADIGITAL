@@ -1,0 +1,17 @@
+# Datos personales: nunca se suben al repo
+data/*.xlsm
+data/*.xlsx
+data/*.xlsb
+data/*.csv
+
+# Secrets de Streamlit
+.streamlit/secrets.toml
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Editor / OS
+.DS_Store
