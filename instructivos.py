@@ -95,23 +95,28 @@ INSTRUCTIVOS = {
         "titulo": "Solicitud enviada — falta descargar el certificado",
         "icono": "📨",
         "color": "blue",
-        "resumen": "Tu solicitud fue aprobada y enviada. El último paso es descargar e instalar tu certificado.",
+        "resumen": "Tu solicitud fue aprobada. El último paso es descargar e instalar tu certificado.",
         "pasos": [
-            "Revisá tu casilla de mail (y la carpeta de spam) buscando un correo de ENCODE con el link de descarga.",
-            "Ingresá al portal de ENCODE con tu usuario y contraseña (los encontrás más abajo, en 'Mis credenciales').",
-            "Seguí el asistente para descargar e instalar el certificado en tu equipo o celular.",
-            "Una vez instalado, avisá a RRHH para que actualicen tu estado a 'Descargado'.",
+            "Entrá a www.encodesa.com.ar",
+            "Andá a \"Autogestión del Certificado\" y hacé click en \"Descargar\".",
+            "En el sector \"Persona Física\" ingresá tu CUIL y el código captcha que aparece en la imagen, y hacé click en \"Buscar\".",
+            "En la tabla de resultados, buscá tu nombre y hacé click en el ícono de la columna \"Descargar\".",
+            "En la ventana que se abre, hacé click en \"Interactuar con el Servicio de Custodia\".",
+            "Ingresá con usuario (tu CUIL) y la Contraseña ENCODE (la encontrás más abajo, en 'Mis credenciales', con el punto al final) y hacé click en \"Iniciar sesión\".",
+            "Ingresá la clave OTP: el código de 6 dígitos que te muestra la app que configuraste (Google Authenticator o FreeOTP) y hacé click en \"Iniciar sesión\".",
+            "Seleccioná tu \"Alias de Certificado\" y hacé click en \"Instalar Certificado\".",
+            "Hacé click en \"Firmar Acuerdo\".",
+            "Volvé a colocar tu PIN de Seguridad (el mismo de siempre, SIN el punto al final) y confirmá.",
+            "Cuando veas \"Certificado instalado\", hacé click en \"Cerrar\". Avisale a RRHH que terminaste.",
         ],
     },
     "COMPLETADO": {
-        "titulo": "Certificado descargado — trámite completo",
+        "titulo": "Trámite completo",
         "icono": "✅",
         "color": "green",
-        "resumen": "¡Listo! Tu certificado de Firma Digital ya fue descargado e instalado.",
+        "resumen": "¡Listo! Tu certificado de Firma Digital ya fue descargado e instalado. No tenés que hacer nada más.",
         "pasos": [
-            "Verificá que podés firmar documentos con normalidad.",
-            "Guardá tu usuario, contraseña y PIN en un lugar seguro: los vas a necesitar para renovar o reinstalar el certificado más adelante.",
-            "Si necesitás instalarlo en otro equipo, contactate con RRHH o el administrador de ENCODE.",
+            "No hay ninguna acción pendiente de tu parte.",
         ],
     },
     "FALTAN_CLAVES": {
@@ -154,11 +159,9 @@ INSTRUCTIVOS = {
         "titulo": "Solicitud rechazada",
         "icono": "❌",
         "color": "red",
-        "resumen": "Tu solicitud fue rechazada. Revisá el motivo y volvé a iniciar el trámite.",
+        "resumen": "Tu solicitud fue rechazada.",
         "pasos": [
-            "Fijate si hay un motivo en 'Observaciones' más abajo.",
-            "El rechazo suele deberse a un DNI vencido, ilegible o mal cargado: tené a mano tu último ejemplar vigente.",
-            "Comunicate con RRHH para que reinicien tu solicitud con los datos corregidos.",
+            "Consultá con RRHH el motivo del rechazo.",
         ],
     },
     "REVOCADO": {
@@ -167,20 +170,15 @@ INSTRUCTIVOS = {
         "color": "red",
         "resumen": "Tu certificado fue revocado y ya no es válido para firmar.",
         "pasos": [
-            "Comunicate con RRHH o el administrador de ENCODE para conocer el motivo de la revocación.",
-            "Vas a tener que iniciar un nuevo trámite de Firma Digital desde cero.",
+            "Consultá con RRHH el motivo de la revocación.",
         ],
     },
     "REHACER": {
         "titulo": "Hay que rehacer el trámite",
         "icono": "🔁",
         "color": "orange",
-        "resumen": "El sistema indica que tenés que volver a iniciar el alta, generalmente por un problema con el DNI presentado.",
-        "pasos": [
-            "Conseguí tu último ejemplar de DNI vigente (que no esté vencido ni dañado).",
-            "Llevalo a RRHH para que vuelvan a cargar tu solicitud de alta en ENCODE.",
-            "Una vez reingresada, tu estado va a pasar a 'Enviado' y vas a poder seguir el trámite desde acá.",
-        ],
+        "resumen": "El sistema indica que tenés que volver a hacer el trámite desde cero, con los mismos pasos que si nunca hubieras iniciado una solicitud.",
+        "pasos": [],
     },
     "OTRO": {
         "titulo": "Estado a revisar con RRHH",
@@ -192,5 +190,9 @@ INSTRUCTIVOS = {
         ],
     },
 }
+
+# "Rehacer el trámite" sigue exactamente la misma guía que "Sin solicitud".
+INSTRUCTIVOS["REHACER"]["antes"] = INSTRUCTIVOS["SIN_SOLICITUD"]["antes"]
+INSTRUCTIVOS["REHACER"]["pasos"] = INSTRUCTIVOS["SIN_SOLICITUD"]["pasos"]
 
 DEFAULT_INSTRUCTIVO = INSTRUCTIVOS["OTRO"]
