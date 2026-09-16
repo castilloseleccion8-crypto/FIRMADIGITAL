@@ -60,6 +60,8 @@ INSTRUCTIVOS = {
         "titulo": "Todavía no hay una solicitud cargada",
         "color": "gray",
         "resumen": "Todavía no iniciaste tu solicitud de Firma Digital ENCODE. Seguí esta guía para darte de alta.",
+        "galeria": "assets/guias/sin_solicitud",
+        "pdf": "assets/guias/sin_solicitud.pdf",
         "antes": [
             "Tené a mano tu último DNI físico vigente.",
             "Descargá la app Google Authenticator en tu celular antes de empezar.",
@@ -94,6 +96,8 @@ INSTRUCTIVOS = {
         "titulo": "Solicitud enviada — falta descargar el certificado",
         "color": "blue",
         "resumen": "Tu solicitud fue aprobada. El último paso es descargar e instalar tu certificado.",
+        "galeria": "assets/guias/pendiente_descarga",
+        "pdf": "assets/guias/pendiente_descarga.pdf",
         "pasos": [
             "Entrá a www.encodesa.com.ar",
             "Andá a \"Autogestión del Certificado\" y hacé click en \"Descargar\".",
@@ -175,5 +179,7 @@ INSTRUCTIVOS = {
 # "Rehacer el trámite" sigue exactamente la misma guía que "Sin solicitud".
 INSTRUCTIVOS["REHACER"]["antes"] = INSTRUCTIVOS["SIN_SOLICITUD"]["antes"]
 INSTRUCTIVOS["REHACER"]["pasos"] = INSTRUCTIVOS["SIN_SOLICITUD"]["pasos"]
+INSTRUCTIVOS["REHACER"]["galeria"] = INSTRUCTIVOS["SIN_SOLICITUD"]["galeria"]
+INSTRUCTIVOS["REHACER"]["pdf"] = INSTRUCTIVOS["SIN_SOLICITUD"]["pdf"]
 
 DEFAULT_INSTRUCTIVO = INSTRUCTIVOS["OTRO"]

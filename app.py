@@ -194,6 +194,26 @@ def formatear_fecha(valor) -> str | None:
     return None
 
 
+def mostrar_galeria(instructivo: dict) -> None:
+    carpeta = instructivo.get("galeria")
+    pdf_path = instructivo.get("pdf")
+    if not carpeta and not pdf_path:
+        return
+
+    imagenes = sorted(Path(carpeta).glob("*.png")) if carpeta and Path(carpeta).is_dir() else []
+
+    with st.expander("Ver el paso a paso con capturas de pantalla"):
+        if pdf_path and Path(pdf_path).is_file():
+            st.download_button(
+                "Descargar guía en PDF",
+                data=Path(pdf_path).read_bytes(),
+                file_name=Path(pdf_path).name,
+                mime="application/pdf",
+            )
+        for i, imagen in enumerate(imagenes, start=1):
+            st.image(str(imagen), caption=f"Paso {i}", use_container_width=True)
+
+
 def mostrar_resultado(fila: pd.Series) -> None:
     nombre = html.escape(str(fila.get(COL_NOMBRE_COMPLETO) or "—"))
     sucursal = html.escape(str(fila.get(COL_SUCURSAL) or "—"))
@@ -238,6 +258,8 @@ def mostrar_resultado(fila: pd.Series) -> None:
 
     if ENCODE_PORTAL_URL:
         st.link_button("Ir al portal de ENCODE", ENCODE_PORTAL_URL)
+
+    mostrar_galeria(instructivo)
 
     observaciones = fila.get(COL_OBSERVACIONES)
     fecha_solicitud = formatear_fecha(fila.get(COL_FECHA_SOLICITUD))
