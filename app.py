@@ -11,6 +11,7 @@ navegador.
 
 from __future__ import annotations
 
+import base64
 import html
 import os
 import re
@@ -24,6 +25,7 @@ from instructivos import ENCODE_PORTAL_URL, INSTRUCTIVOS, DEFAULT_INSTRUCTIVO, c
 
 SHEET_NAME = "DATOS"
 DATA_PATH = Path(os.environ.get("ENCODE_XLSM_PATH", "data/Lista_Gral.xlsm"))
+LOGO_PATH = Path("assets/branding/logo.png")
 
 COL_DNI = "DNI"
 COL_SUCURSAL = "SUCURSAL"
@@ -36,12 +38,11 @@ COL_FECHA_SOLICITUD = "FECHA DE SOLICITUD"
 COL_OBSERVACIONES = "OBSERVACIONES"
 COL_ESTADO_ENCODE = "ESTADO ENCODE"
 
-# Paleta de marca Castillo, tomada de castillo.com.ar (navbar oscura,
-# acentos dorados, botones de acción en azul). Ajustá estos valores si
-# tenés los códigos de color exactos del manual de marca.
-NAVY = "#10233F"
-NAVY_DEEP = "#0A1626"
-GOLD = "#FFC629"
+# Paleta de marca Castillo. El navy y el dorado están tomados directamente
+# del logo oficial (assets/branding/logo.png); el resto son variantes.
+NAVY = "#0F1089"
+NAVY_DEEP = "#0A0B5E"
+GOLD = "#FDC60A"
 GOLD_DARK = "#C98A00"
 BLUE_CTA = "#2563EB"
 BLUE_CTA_DARK = "#1D4ED8"
@@ -62,7 +63,7 @@ def inyectar_estilos() -> None:
     st.markdown(
         f"""
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&family=Pacifico&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap');
 
         #MainMenu, footer, header {{ visibility: hidden; }}
 
@@ -86,20 +87,16 @@ def inyectar_estilos() -> None:
             padding: 26px 2rem 22px 2rem;
             box-shadow: 0 6px 18px rgba(10, 22, 38, 0.25);
         }}
-        .cst-wordmark {{
-            font-family: 'Pacifico', cursive;
-            font-size: 34px;
-            color: {GOLD};
-            margin: 0;
-            line-height: 1;
+        .cst-navbar-row {{
+            display: flex;
+            align-items: center;
+            gap: 26px;
+            flex-wrap: wrap;
         }}
-        .cst-tagline {{
-            color: #92A0C4;
-            font-size: 11.5px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            font-weight: 600;
-            margin: 4px 0 14px 0;
+        .cst-logo {{
+            height: 88px;
+            width: auto;
+            flex-shrink: 0;
         }}
         .cst-navbar h1 {{
             font-family: 'Poppins', sans-serif;
@@ -414,13 +411,18 @@ def panel_administracion() -> None:
 def main() -> None:
     inyectar_estilos()
 
+    logo_html = ""
+    if LOGO_PATH.is_file():
+        logo_b64 = base64.b64encode(LOGO_PATH.read_bytes()).decode("ascii")
+        logo_html = f'<img class="cst-logo" src="data:image/png;base64,{logo_b64}" alt="Castillo" />'
+
     st.markdown(
-        '<div class="cst-navbar">'
-        '<p class="cst-wordmark">Castillo</p>'
-        '<p class="cst-tagline">Desde 1924</p>'
+        '<div class="cst-navbar"><div class="cst-navbar-row">'
+        f"{logo_html}"
+        '<div class="cst-navbar-text">'
         "<h1>Estado de mi Firma Digital ENCODE</h1>"
         "<p>Ingresá tu CUIL o DNI para ver en qué paso está tu trámite y qué tenés que hacer para continuarlo.</p>"
-        "</div>",
+        "</div></div></div>",
         unsafe_allow_html=True,
     )
 
