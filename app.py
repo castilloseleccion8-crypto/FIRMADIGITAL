@@ -152,7 +152,8 @@ def inyectar_estilos() -> None:
             letter-spacing: 0.5px;
         }}
 
-        div.stButton > button {{
+        div.stButton > button,
+        div[data-testid="stFormSubmitButton"] > button {{
             background-color: {BLUE_CTA};
             color: #FFFFFF;
             border: none;
@@ -161,9 +162,15 @@ def inyectar_estilos() -> None:
             padding: 0.6rem 2rem;
             box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
         }}
-        div.stButton > button:hover {{
+        div.stButton > button:hover,
+        div[data-testid="stFormSubmitButton"] > button:hover {{
             background-color: {BLUE_CTA_DARK};
             color: #FFFFFF;
+        }}
+        div.stButton > button:focus:not(:active),
+        div[data-testid="stFormSubmitButton"] > button:focus:not(:active) {{
+            color: #FFFFFF;
+            border-color: {BLUE_CTA_DARK};
         }}
         div[data-testid="stDownloadButton"] > button {{
             background-color: #FFFFFF;
@@ -178,6 +185,10 @@ def inyectar_estilos() -> None:
         }}
 
         /* ---------- Tarjeta de resultado ---------- */
+        @keyframes cstFadeIn {{
+            from {{ opacity: 0; transform: translateY(6px); }}
+            to {{ opacity: 1; transform: translateY(0); }}
+        }}
         .cst-card {{
             background: #FFFFFF;
             border-radius: 16px;
@@ -185,7 +196,9 @@ def inyectar_estilos() -> None:
             border-left: 6px solid var(--card-color, {NAVY});
             box-shadow: 0 2px 10px rgba(16, 35, 63, 0.08);
             margin-bottom: 22px;
+            animation: cstFadeIn 0.35s ease-out;
         }}
+        .cst-warning {{ animation: cstFadeIn 0.35s ease-out; }}
         .cst-badge {{
             display: inline-block;
             font-family: 'Poppins', sans-serif;
@@ -425,8 +438,9 @@ def main() -> None:
     df = cargar_datos(str(DATA_PATH), mtime)
     st.sidebar.caption(f"Datos actualizados: {datetime.fromtimestamp(mtime).strftime('%d/%m/%Y %H:%M')}")
 
-    consulta = st.text_input("CUIL o DNI", placeholder="Ej: 20-38488471-8")
-    buscar = st.button("Buscar", type="primary")
+    with st.form("busqueda", clear_on_submit=False):
+        consulta = st.text_input("CUIL o DNI", placeholder="Ej: 20-38488471-8")
+        buscar = st.form_submit_button("Buscar", type="primary")
 
     if not (buscar or consulta):
         return
