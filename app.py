@@ -243,6 +243,19 @@ def inyectar_estilos() -> None:
             border-radius: 12px;
             border: 1px solid #E1E5F0;
         }}
+
+        .cst-galeria-titulo {{
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: {NAVY};
+            margin: 4px 0 12px 0;
+        }}
+        div[data-testid="stImage"] img {{
+            border-radius: 10px;
+            border: 1px solid #E1E5F0;
+            box-shadow: 0 1px 4px rgba(16, 35, 63, 0.08);
+        }}
         </style>
         """,
         unsafe_allow_html=True,
@@ -287,16 +300,16 @@ def mostrar_galeria(instructivo: dict) -> None:
 
     imagenes = sorted(Path(carpeta).glob("*.png")) if carpeta and Path(carpeta).is_dir() else []
 
-    with st.expander("Ver el paso a paso con capturas de pantalla"):
-        if pdf_path and Path(pdf_path).is_file():
-            st.download_button(
-                "Descargar guía en PDF",
-                data=Path(pdf_path).read_bytes(),
-                file_name=Path(pdf_path).name,
-                mime="application/pdf",
-            )
-        for i, imagen in enumerate(imagenes, start=1):
-            st.image(str(imagen), caption=f"Paso {i}", use_container_width=True)
+    st.markdown('<h3 class="cst-galeria-titulo">Mirá el paso a paso</h3>', unsafe_allow_html=True)
+    if pdf_path and Path(pdf_path).is_file():
+        st.download_button(
+            "Descargar guía completa en PDF",
+            data=Path(pdf_path).read_bytes(),
+            file_name=Path(pdf_path).name,
+            mime="application/pdf",
+        )
+    for i, imagen in enumerate(imagenes, start=1):
+        st.image(str(imagen), caption=f"Paso {i}", use_container_width=True)
 
 
 def mostrar_resultado(fila: pd.Series) -> None:
@@ -312,8 +325,10 @@ def mostrar_resultado(fila: pd.Series) -> None:
         items = "".join(f"<li>{html.escape(item, quote=False)}</li>" for item in instructivo["antes"])
         antes_html = f"<h3>Antes de empezar</h3><ul>{items}</ul>"
 
+    tiene_galeria = bool(instructivo.get("galeria"))
+
     pasos_html = ""
-    if instructivo.get("pasos"):
+    if instructivo.get("pasos") and not tiene_galeria:
         items = "".join(f"<li>{html.escape(paso, quote=False)}</li>" for paso in instructivo["pasos"])
         pasos_html = f"<h3>¿Qué tengo que hacer?</h3><ol>{items}</ol>"
 
@@ -345,6 +360,11 @@ def mostrar_resultado(fila: pd.Series) -> None:
         st.link_button("Ir al portal de ENCODE", ENCODE_PORTAL_URL)
 
     mostrar_galeria(instructivo)
+
+    if tiene_galeria and instructivo.get("pasos"):
+        with st.expander("Ver los pasos escritos"):
+            for i, paso in enumerate(instructivo["pasos"], start=1):
+                st.markdown(f"{i}. {paso}")
 
     observaciones = fila.get(COL_OBSERVACIONES)
     fecha_solicitud = formatear_fecha(fila.get(COL_FECHA_SOLICITUD))
