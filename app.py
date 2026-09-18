@@ -170,15 +170,18 @@ def inyectar_estilos() -> None:
             border-color: {BLUE_CTA_DARK};
         }}
         div[data-testid="stDownloadButton"] > button {{
-            background-color: #FFFFFF;
-            color: {BLUE_CTA};
-            border: 1.5px solid {BLUE_CTA};
+            background-color: {GOLD}!important;
+            color: {NAVY}!important;
+            border: none;
             border-radius: 999px;
-            font-weight: 600;
+            font-weight: 700;
+            padding: 0.65rem 2.2rem;
+            font-size: 15.5px;
+            box-shadow: 0 3px 10px rgba(253, 198, 10, 0.4);
         }}
         div[data-testid="stDownloadButton"] > button:hover {{
-            background-color: {BLUE_CTA};
-            color: #FFFFFF;
+            background-color: {GOLD_DARK}!important;
+            color: {NAVY}!important;
         }}
 
         /* ---------- Tarjeta de resultado ---------- */
@@ -332,6 +335,10 @@ def mostrar_resultado(fila: pd.Series) -> None:
         items = "".join(f"<li>{html.escape(paso, quote=False)}</li>" for paso in instructivo["pasos"])
         pasos_html = f"<h3>¿Qué tengo que hacer?</h3><ol>{items}</ol>"
 
+    # La galería (con el botón de descarga del PDF) va primero, antes que
+    # cualquier otra cosa, para que sea lo primero que la persona ve.
+    mostrar_galeria(instructivo)
+
     # Todo en una sola línea sin indentación: un salto de línea o espacios
     # sueltos dentro del bloque hacen que Streamlit lo interprete como
     # markdown (bloque de código) en lugar de HTML.
@@ -358,8 +365,6 @@ def mostrar_resultado(fila: pd.Series) -> None:
 
     if ENCODE_PORTAL_URL:
         st.link_button("Ir al portal de ENCODE", ENCODE_PORTAL_URL)
-
-    mostrar_galeria(instructivo)
 
     if tiene_galeria and instructivo.get("pasos"):
         with st.expander("Ver los pasos escritos"):
