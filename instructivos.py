@@ -28,9 +28,9 @@ def clasificar_estado(estado_original: str) -> str:
     en un número chico de categorías, cada una con su instructivo."""
     e = _normalizar(estado_original)
 
-    if not e or e in ("#n/a", "nan", "none"):
+    if not e or e in ("#n/a", "nan", "none", "0"):
         return "SIN_SOLICITUD"
-    if "no se encuentra solicitud" in e:
+    if "no se encuentra solicitud" in e or "sin solicitud" in e:
         return "SIN_SOLICITUD"
     if "descargado" in e:
         return "COMPLETADO"
@@ -40,7 +40,7 @@ def clasificar_estado(estado_original: str) -> str:
         return "RECHAZADA"
     if "revoc" in e:
         return "REVOCADO"
-    if "alta nuevamente" in e or "proceso de nuevo" in e:
+    if "rehacer" in e or "alta nuevamente" in e or "proceso de nuevo" in e:
         return "REHACER"
 
     tiene_clave = "clave" in e
