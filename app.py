@@ -32,8 +32,6 @@ COL_SUCURSAL = "SUCURSAL"
 COL_CUIL = "CUIL"
 COL_BAJA = "BAJA"
 COL_NOMBRE_COMPLETO = "Apellido y Nombre"
-COL_CONTRASENA = "CONTRASEÑA ENCODE"
-COL_PIN = "PIN"
 COL_FECHA_SOLICITUD = "FECHA DE SOLICITUD"
 COL_OBSERVACIONES = "OBSERVACIONES"
 COL_ESTADO_ENCODE = "ESTADO ENCODE"
@@ -406,17 +404,6 @@ def mostrar_resultado(fila: pd.Series) -> None:
     with st.expander("Detalle del sistema"):
         for etiqueta, valor in detalles:
             st.markdown(f"**{etiqueta}:** {valor}")
-
-    usuario = fila.get(COL_DNI)
-    contrasena = fila.get(COL_CONTRASENA)
-    pin = fila.get(COL_PIN)
-    if contrasena or pin:
-        with st.expander("Mis credenciales para ingresar al portal de ENCODE"):
-            st.markdown(f"**Usuario (DNI):** {usuario}")
-            if contrasena:
-                st.markdown(f"**Contraseña** (para iniciar sesión, con el punto al final): `{contrasena}`")
-            if pin:
-                st.markdown(f"**PIN** (para el PIN de seguridad, SIN el punto al final): `{pin}`")
 
 
 def panel_administracion() -> None:
