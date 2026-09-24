@@ -63,14 +63,14 @@ def inyectar_estilos() -> None:
     st.markdown(
         f"""
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap');
 
         #MainMenu, footer {{ visibility: hidden; }}
         header[data-testid="stHeader"] {{ background: transparent; }}
         [data-testid="stAppDeployButton"], [data-testid="stMainMenu"] {{ visibility: hidden; }}
 
         html, body, [class*="css"], .stApp {{
-            font-family: 'Inter', -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Roboto', -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
         }}
         .stApp {{ background-color: #EFF1F6; }}
         .block-container {{
@@ -101,7 +101,7 @@ def inyectar_estilos() -> None:
             flex-shrink: 0;
         }}
         .cst-navbar h1 {{
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', sans-serif;
             color: #FFFFFF;
             font-size: 23px;
             font-weight: 700;
@@ -203,7 +203,7 @@ def inyectar_estilos() -> None:
         .cst-warning {{ animation: cstFadeIn 0.35s ease-out; }}
         .cst-badge {{
             display: inline-block;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', sans-serif;
             font-size: 11.5px;
             font-weight: 700;
             letter-spacing: 1px;
@@ -227,7 +227,7 @@ def inyectar_estilos() -> None:
             animation: cstFadeIn 0.35s ease-out;
         }}
         .cst-hero-titulo {{
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', sans-serif;
             font-size: 32px;
             font-weight: 700;
             color: {NAVY};
@@ -237,7 +237,7 @@ def inyectar_estilos() -> None:
         .cst-persona {{ color: #667085; font-size: 13.5px; margin: 0 0 14px 0; }}
         .cst-card .cst-resumen {{ font-size: 15px; color: #1F2430; margin: 0 0 6px 0; line-height: 1.6; }}
         .cst-card h3 {{
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', sans-serif;
             font-size: 12.5px;
             text-transform: uppercase;
             letter-spacing: 0.8px;
@@ -264,7 +264,7 @@ def inyectar_estilos() -> None:
         }}
 
         .cst-galeria-titulo {{
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', sans-serif;
             font-size: 16px;
             font-weight: 700;
             color: {NAVY};
