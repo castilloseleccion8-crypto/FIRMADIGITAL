@@ -412,7 +412,6 @@ def mostrar_resultado(fila: pd.Series) -> None:
     pin = fila.get(COL_PIN)
     if contrasena or pin:
         with st.expander("Mis credenciales para ingresar al portal de ENCODE"):
-            st.caption("No las compartas con nadie. Si no las reconocés, avisá a RRHH.")
             st.markdown(f"**Usuario (DNI):** {usuario}")
             if contrasena:
                 st.markdown(f"**Contraseña** (para iniciar sesión, con el punto al final): `{contrasena}`")
