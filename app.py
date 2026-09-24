@@ -65,7 +65,9 @@ def inyectar_estilos() -> None:
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap');
 
-        #MainMenu, footer, header {{ visibility: hidden; }}
+        #MainMenu, footer {{ visibility: hidden; }}
+        header[data-testid="stHeader"] {{ background: transparent; }}
+        [data-testid="stAppDeployButton"], [data-testid="stMainMenu"] {{ visibility: hidden; }}
 
         html, body, [class*="css"], .stApp {{
             font-family: 'Inter', -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
