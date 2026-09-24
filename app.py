@@ -214,13 +214,27 @@ def inyectar_estilos() -> None:
             color: var(--badge-text, #333);
             margin-bottom: 14px;
         }}
-        .cst-card h2 {{
-            font-family: 'Poppins', sans-serif;
-            font-size: 21px;
-            margin: 0 0 4px 0;
-            color: {NAVY};
+
+        /* ---------- Estado: grande y centrado, lo primero que se ve ---------- */
+        .cst-hero {{
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 34px 28px 28px 28px;
+            border-top: 6px solid var(--card-color, {NAVY});
+            box-shadow: 0 2px 10px rgba(16, 35, 63, 0.08);
+            margin-bottom: 20px;
+            text-align: center;
+            animation: cstFadeIn 0.35s ease-out;
         }}
-        .cst-card .cst-persona {{ color: #667085; font-size: 13.5px; margin: 0 0 14px 0; }}
+        .cst-hero-titulo {{
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: {NAVY};
+            margin: 0 0 10px 0;
+            line-height: 1.25;
+        }}
+        .cst-persona {{ color: #667085; font-size: 13.5px; margin: 0 0 14px 0; }}
         .cst-card .cst-resumen {{ font-size: 15px; color: #1F2430; margin: 0 0 6px 0; line-height: 1.6; }}
         .cst-card h3 {{
             font-family: 'Poppins', sans-serif;
@@ -337,8 +351,17 @@ def mostrar_resultado(fila: pd.Series) -> None:
         items = "".join(f"<li>{html.escape(paso, quote=False)}</li>" for paso in instructivo["pasos"])
         pasos_html = f"<h3>¿Qué tengo que hacer?</h3><ol>{items}</ol>"
 
-    # La galería (con el botón de descarga del PDF) va primero, antes que
-    # cualquier otra cosa, para que sea lo primero que la persona ve.
+    # Lo primero que ve la persona es el estado, grande y centrado.
+    hero = (
+        f'<div class="cst-hero" style="--card-color:{estilo["card"]}">'
+        f'<span class="cst-badge" style="--badge-bg:{estilo["badge_bg"]};--badge-text:{estilo["badge_text"]}">{estilo["label"]}</span>'
+        f'<h1 class="cst-hero-titulo">{html.escape(instructivo["titulo"])}</h1>'
+        f'<p class="cst-persona">{nombre} · {sucursal}</p>'
+        f"</div>"
+    )
+    st.markdown(hero, unsafe_allow_html=True)
+
+    # Después, la galería (con el botón de descarga del PDF).
     mostrar_galeria(instructivo)
 
     # Todo en una sola línea sin indentación: un salto de línea o espacios
@@ -346,9 +369,6 @@ def mostrar_resultado(fila: pd.Series) -> None:
     # markdown (bloque de código) en lugar de HTML.
     tarjeta = (
         f'<div class="cst-card" style="--card-color:{estilo["card"]}">'
-        f'<span class="cst-badge" style="--badge-bg:{estilo["badge_bg"]};--badge-text:{estilo["badge_text"]}">{estilo["label"]}</span>'
-        f'<h2>{html.escape(instructivo["titulo"])}</h2>'
-        f'<p class="cst-persona">{nombre} · {sucursal}</p>'
         f'<p class="cst-resumen">{html.escape(instructivo["resumen"])}</p>'
         f"{antes_html}{pasos_html}"
         f"</div>"
