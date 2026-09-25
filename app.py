@@ -17,11 +17,19 @@ import os
 import re
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import quote
 
 import pandas as pd
 import streamlit as st
 
-from instructivos import ENCODE_PORTAL_URL, INSTRUCTIVOS, DEFAULT_INSTRUCTIVO, clasificar_estado
+from instructivos import (
+    CATEGORIAS_CON_AVISO_RRHH,
+    ENCODE_PORTAL_URL,
+    INSTRUCTIVOS,
+    DEFAULT_INSTRUCTIVO,
+    WHATSAPP_RRHH_NUMERO,
+    clasificar_estado,
+)
 
 SHEET_NAME = "DATOS"
 DATA_PATH = Path(os.environ.get("ENCODE_XLSM_PATH", "data/Lista_Gral.xlsm"))
@@ -182,6 +190,20 @@ def inyectar_estilos() -> None:
         div[data-testid="stDownloadButton"] > button:hover {{
             background-color: {GOLD_DARK}!important;
             color: {NAVY}!important;
+        }}
+
+        div[data-testid="stLinkButton"] > a {{
+            background-color: #25D366;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 999px;
+            font-weight: 600;
+            padding: 0.55rem 1.6rem;
+            box-shadow: 0 2px 8px rgba(37, 211, 102, 0.35);
+        }}
+        div[data-testid="stLinkButton"] > a:hover {{
+            background-color: #1DA851;
+            color: #FFFFFF;
         }}
 
         /* ---------- Tarjeta de resultado ---------- */
@@ -382,6 +404,17 @@ def mostrar_resultado(fila: pd.Series) -> None:
             "</div>"
         )
         st.markdown(aviso, unsafe_allow_html=True)
+
+    if WHATSAPP_RRHH_NUMERO and categoria in CATEGORIAS_CON_AVISO_RRHH:
+        nombre_plano = str(fila.get(COL_NOMBRE_COMPLETO) or "—")
+        dni_plano = fila.get(COL_DNI)
+        sucursal_plana = str(fila.get(COL_SUCURSAL) or "—")
+        mensaje = (
+            f"Hola, soy {nombre_plano} (DNI {dni_plano}, {sucursal_plana}). "
+            f'Mi estado en la Firma Digital ENCODE es "{instructivo["titulo"]}" y necesito ayuda para continuar.'
+        )
+        link_whatsapp = f"https://wa.me/{WHATSAPP_RRHH_NUMERO}?text={quote(mensaje)}"
+        st.link_button("Avisar a RRHH por WhatsApp", link_whatsapp)
 
     if ENCODE_PORTAL_URL:
         st.link_button("Ir al portal de ENCODE", ENCODE_PORTAL_URL)

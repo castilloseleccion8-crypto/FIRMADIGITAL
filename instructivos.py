@@ -15,6 +15,25 @@ import unicodedata
 # que corresponda). Si la dejás vacía, la app simplemente no muestra el botón.
 ENCODE_PORTAL_URL = ""
 
+# Número de WhatsApp de RRHH (solo dígitos, con código de país, sin "+" ni
+# espacios) al que se manda el mensaje de "Avisar a RRHH". Si lo dejás
+# vacío, la app no muestra ese botón.
+WHATSAPP_RRHH_NUMERO = "5493815340867"
+
+# Categorías (ver clasificar_estado) en las que se muestra el botón de
+# avisar a RRHH: cualquier estado donde falta algo de parte de la
+# persona, excepto cuando ya está todo enviado o completo.
+CATEGORIAS_CON_AVISO_RRHH = {
+    "SIN_SOLICITUD",
+    "FALTAN_CLAVES",
+    "FALTA_IDENTIFICACION",
+    "CLAVES_E_IDENTIFICACION",
+    "RECHAZADA",
+    "REVOCADO",
+    "REHACER",
+    "OTRO",
+}
+
 
 def _normalizar(texto: str) -> str:
     texto = "" if texto is None else str(texto)
